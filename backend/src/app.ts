@@ -2,10 +2,10 @@ import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
 import { requestLogger } from './middlewares/request-logger.middleware.js';
-import { env } from './config/env.config.js';
 import cookieParser from 'cookie-parser';
 import { globalErrorHandler } from './middlewares/error.middleware.js';
 import authRouter from './modules/auth/auth.route.js';
+import { env } from './config/env.config.js';
 
 const app = express();
 

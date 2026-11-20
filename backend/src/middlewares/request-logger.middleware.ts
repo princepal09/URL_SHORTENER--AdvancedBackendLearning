@@ -1,19 +1,15 @@
-import { NextFunction, Request, Response } from "express";
-import { logger } from "../config/logger.js";
+import { NextFunction, Request, Response } from 'express';
+import { logger } from '../config/logger.js';
 
-export const requestLogger = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
+export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
   const start = Date.now();
 
-  res.on("finish", () => {
+  res.on('finish', () => {
     const duration = Date.now() - start;
 
     logger.info({
       method: req.method,
-      url: req.originalUrl.split("?")[0],
+      url: req.originalUrl.split('?')[0],
       statusCode: res.statusCode,
       duration: `${duration}ms`,
       ip: req.ip,
