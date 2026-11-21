@@ -8,7 +8,7 @@ const router = express.Router();
 
 const userController = new UrlController();
 
-
 router.post('/', validate(createUrlSchema), authMiddleware, userController.createshortUrl);
+router.get('/:shortCode', userController.redirectToOriginURL);
 
 export default router;
