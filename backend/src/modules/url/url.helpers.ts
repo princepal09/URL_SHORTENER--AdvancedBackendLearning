@@ -27,3 +27,7 @@ export const parseUrl = (originalUrl: string) => {
     throw new AppError('Invalid URL format.', 400);
   }
 };
+
+export const getShortUrlCacheKey = (shortCode: string) => {
+  return `shortCode:${shortCode}`;
+};

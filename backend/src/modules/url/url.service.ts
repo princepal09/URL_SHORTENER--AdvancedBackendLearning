@@ -1,7 +1,9 @@
+import { logger } from '../../config/logger.js';
 import { AppError } from '../../utils/common/error/AppError.js';
-import { createShortCode } from './url.helpers.js';
+import { deleteCache, getCache, setCache } from './cache/cache.service.js';
+import { createShortCode, getShortUrlCacheKey } from './url.helpers.js';
 import { IUrlRepository } from './url.interface.js';
-import { UrlInputType } from './url.schema.js';
+import { UpdateUrlInputType, UrlInputType } from './url.schema.js';
 
 export class UrlService {
   constructor(private urlRepo: IUrlRepository) {}
@@ -30,12 +32,54 @@ export class UrlService {
   }
 
   async getOriginalUrlFromShortCode(shortCode: string) {
-    const shortURL = await this.urlRepo.findShortUrlByShortCode(shortCode);
+    const cachedOriginalUrl = await getCache(getShortUrlCacheKey(shortCode));
 
-    if (!shortURL) {
+    if (cachedOriginalUrl) {
+      logger.info({ event: 'CACHE_HIT' }, shortCode);
+      return cachedOriginalUrl;
+    }
+
+    logger.info({
+      event: 'CACHE_MISS',
+      shortCode,
+    });
+    const shortUrl = await this.urlRepo.findShortUrlByShortCode(shortCode);
+
+    if (!shortUrl) {
       throw new AppError('Short URL not found', 404);
     }
 
-    return shortURL.originalUrl;
+    await setCache(getShortUrlCacheKey(shortUrl.shortCode), `${shortUrl.originalUrl}`, 300);
+
+    return shortUrl.originalUrl;
+  }
+
+  async updateShortUrl(userId: string, shortCode: string, data: UpdateUrlInputType) {
+    const shortUrl = await this.urlRepo.findShortUrlByShortCode(shortCode);
+
+    if (!shortUrl) {
+      throw new AppError('Short URl not found', 404);
+    }
+
+    if (shortUrl?.userId !== userId) {
+      throw new AppError('You are not allowed to perform this action', 403);
+    }
+
+    const updatedShortUrl = await this.urlRepo.updateShortUrl(shortCode, data);
+
+    if (!updatedShortUrl) {
+      throw new AppError('You are not allowed to perform this action', 403);
+    }
+
+
+    await deleteCache(getShortUrlCacheKey(shortCode));
+
+    await setCache(
+      getShortUrlCacheKey(updatedShortUrl.shortCode),
+      `${updatedShortUrl.originalUrl}`,
+      300,
+    );
+
+    return updatedShortUrl;
   }
 }

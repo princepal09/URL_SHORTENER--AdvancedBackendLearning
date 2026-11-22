@@ -10,6 +10,10 @@ redis.on('connect', () => {
   logger.info('Redis connected successfully');
 });
 
+redis.on("ready", async () => {
+  logger.info("Redis is ready.");
+});
+
 redis.on('error', (err) => {
   logger.error({
     status: false,
