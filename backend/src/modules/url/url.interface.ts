@@ -1,8 +1,7 @@
-import { ShortURL } from "../../../generated/prisma/client.js";
-import { createShortUrlType } from "./url.types.js";
+import { ShortURL } from '../../../generated/prisma/client.js';
+import { createShortUrlType } from './url.types.js';
 
-export interface IUrlRepository{
-
-    findShortUrlByShortCode(shortCode: string): Promise<ShortURL | null>
-    createShortUrl(data:createShortUrlType):Promise<ShortURL>
+export interface IUrlRepository {
+  findShortUrlByShortCode(shortCode: string): Promise<ShortURL | null>;
+  createShortUrl(data: createShortUrlType): Promise<ShortURL>;
 }

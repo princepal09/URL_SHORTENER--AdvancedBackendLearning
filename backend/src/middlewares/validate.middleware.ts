@@ -9,13 +9,12 @@ export const validate =
   (req: Request, _res: Response, next: NextFunction) => {
     const data = req[target];
     const result = schema.safeParse(data);
-    
+
     if (!result.success) {
       const errors = result.error.issues.map((error) => ({
         field: error.path.join(''),
         message: error.message,
       }));
-
 
       throw new AppError(errors.map((error) => `${error.field}: ${error.message}`).join(', '), 400);
     }

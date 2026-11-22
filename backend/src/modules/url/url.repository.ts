@@ -13,13 +13,10 @@ export class UrlRespository implements IUrlRepository {
   }
 
   async findShortUrlByShortCode(shortCode: string): Promise<ShortURL | null> {
-      return prisma.shortURL.findUnique({
-        where: {
-            shortCode
-        }
-      })
+    return prisma.shortURL.findUnique({
+      where: {
+        shortCode,
+      },
+    });
   }
- 
-
-
 }

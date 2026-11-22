@@ -1,18 +1,18 @@
 export type createShortUrlType = {
-    originalUrl: string
-    userId: string
-    shortCode: string
-}
+  originalUrl: string;
+  userId: string;
+  shortCode: string;
+};
 
 export type updateShortUrlType = {
-    updatedOriginalUrl: string
-}
+  updatedOriginalUrl: string;
+};
 
 export type shortUrlType = {
-    id: string
-    originalUrl: string
-    userId: string
-    shortCode: string
-    createdAt: string
-    updatedAt: string 
-}
+  id: string;
+  originalUrl: string;
+  userId: string;
+  shortCode: string;
+  createdAt: string;
+  updatedAt: string;
+};

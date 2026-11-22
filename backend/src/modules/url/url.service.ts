@@ -29,14 +29,13 @@ export class UrlService {
     throw new AppError('Short code for this url already exists', 400);
   }
 
-  async getOriginalUrlFromShortCode(shortCode: string){
+  async getOriginalUrlFromShortCode(shortCode: string) {
     const shortURL = await this.urlRepo.findShortUrlByShortCode(shortCode);
 
-    if(!shortURL){
-        throw new AppError("Short URL not found", 404)
+    if (!shortURL) {
+      throw new AppError('Short URL not found', 404);
     }
 
     return shortURL.originalUrl;
-
   }
 }

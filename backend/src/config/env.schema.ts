@@ -10,7 +10,8 @@ export const envSchema = z.object({
   REFRESH_TOKEN_SECRET: z.string(),
   ACCESS_TOKEN_EXPIRES_IN: z.string(),
   REFRESH_TOKEN_EXPIRES_IN: z.string(),
-  URL_SHORTCODE_LENGTH: z.coerce.number()
+  URL_SHORTCODE_LENGTH: z.coerce.number(),
+  REDIS_URL: z.string(),
 });
 
 export type Env = z.infer<typeof envSchema>;

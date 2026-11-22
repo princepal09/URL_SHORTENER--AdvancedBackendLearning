@@ -2,6 +2,7 @@ import app from './app.js';
 import { env } from './config/env.config.js';
 import { logger } from './config/logger.js';
 import { prisma } from './lib/prisma.js';
+import redis from './lib/redis.js';
 const port = env?.PORT;
 
 const server = app.listen(port, () => {
@@ -13,8 +14,10 @@ const gracefulShutdown = async (signal: string) => {
 
   server.close(async () => {
     await prisma.$disconnect();
+    await redis.quit();
 
     logger.info('Database disconnected');
+    logger.info('Redis disconnected');
 
     process.exit(0);
   });

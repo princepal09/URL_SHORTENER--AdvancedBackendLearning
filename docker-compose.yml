@@ -36,9 +36,26 @@ services:
         condition: service_healthy
     restart: unless-stopped
 
+  redis: 
+    image: redis:7-alpine
+    container_name: my-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - pg-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped        
+
 networks:
   pg-net:
 
 volumes:
   pgdata:
   pgadmin_data:
+  redis_data:
