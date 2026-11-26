@@ -1,17 +1,16 @@
-import { shortUrlType } from '../url/url.types.js';
-import { RequestMetaDataType } from './analytics.types.js';
+import { RecordClickInputType } from './analytics.types.js';
 import { IAnalyticsRepository } from './anayltics.interface.js';
 
 export class AnalyticsService {
   constructor(private analyticsRepo: IAnalyticsRepository) {}
 
-  async recordClick(shortUrl: shortUrlType, requestMetaData: RequestMetaDataType) {
+  async recordClick(data: RecordClickInputType) {
     await this.analyticsRepo.createAnalytics({
-      shortUrlId: shortUrl.id,
+      shortUrlId: data.shortUrlId,
       clickedAt: new Date(),
-      ipAddress: requestMetaData.ipAddress,
-      userAgent: requestMetaData.userAgent,
-      referrer: requestMetaData.referrer,
+      ipAddress: data.ipAddress,
+      userAgent: data.userAgent,
+      referrer: data.referrer,
     });
   }
 }

@@ -3,23 +3,32 @@ import { logger } from '../config/logger.js';
 import { deadLetterQueue } from '../queues/deadLetterQueue.js';
 import { redisConnection } from '../lib/redis.js';
 import { analyticsService } from '../modules/analytics/anayltics.container.js';
+import { RecordAnalyticsJob } from './workers.type.js';
 
-new Worker(
+new Worker<RecordAnalyticsJob>(
   'analyticsQueue',
   async (job) => {
     try {
-      if (job.name === 'record-analytics')
-        console.log({
-          jobName: job.name,
+      if (job.name === 'record-analytics') {
+        logger.info({
+          event: 'ANAYLTICS_JOB_STARTED',
           jobId: job.id,
-          jobData: job.data,
+          shortUrlId: job.data.shortUrlId,
         });
 
-      await analyticsService.recordClick(job.data.shortUrl, {
-        ipAddress: job.data.ipAddress,
-        userAgent: job.data.userAgent,
-        referrer: job.data.referrer,
-      });
+        await analyticsService.recordClick({
+          shortUrlId: job.data.shortUrlId,
+          ipAddress: job.data.ipAddress,
+          userAgent: job.data.userAgent,
+          referrer: job.data.referrer,
+        });
+
+        logger.info({
+          event: 'ANAYLTICS_JOB_COMPLETED',
+          jobId: job.id,
+          shortUrlId: job.data.shortUrlId,
+        });
+      }
     } catch (error) {
       logger.error({
         message: `Job ${job.id} has failed`,

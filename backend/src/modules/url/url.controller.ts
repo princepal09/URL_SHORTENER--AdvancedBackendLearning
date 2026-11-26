@@ -24,12 +24,24 @@ export class UrlController {
 
     const shortUrl = await urlService.getOriginalUrlFromShortCode(shortCode);
 
-    await analyticsQueue.add('record-analytics', {
-      shortUrl,
-      ipAddress: req.ip,
-      userAgent: req.headers['user-agent'],
-      referrer: req.get('Referer'),
-    });
+    await analyticsQueue.add(
+      'record-analytics',
+      {
+        shortUrlId: shortUrl.id,
+        ipAddress: req.ip,
+        userAgent: req.headers['user-agent'],
+        referrer: req.get('Referer'),
+      },
+      {
+        attempts: 5,
+        backoff: {
+          type: 'exponential',
+          delay: 2000,
+        },
+        removeOnComplete: 1000,
+        removeOnFail: 5000
+      },
+    );
 
     res.redirect(shortUrl.originalUrl);
   });
