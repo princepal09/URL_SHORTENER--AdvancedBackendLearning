@@ -32,11 +32,12 @@ export class UrlService {
   }
 
   async getOriginalUrlFromShortCode(shortCode: string) {
-    const cachedOriginalUrl = await getCache(getShortUrlCacheKey(shortCode));
+    const cachedShortUrl = await getCache(getShortUrlCacheKey(shortCode));
 
-    if (cachedOriginalUrl) {
+    if (cachedShortUrl) {
+      const parsedCachedShortUrl = JSON.parse(cachedShortUrl);
       logger.info({ event: 'CACHE_HIT' }, shortCode);
-      return cachedOriginalUrl;
+      return parsedCachedShortUrl;
     }
 
     logger.info({
@@ -49,9 +50,9 @@ export class UrlService {
       throw new AppError('Short URL not found', 404);
     }
 
-    await setCache(getShortUrlCacheKey(shortUrl.shortCode), `${shortUrl.originalUrl}`, 300);
+    await setCache(getShortUrlCacheKey(shortUrl.shortCode), JSON.stringify(shortUrl), 300);
 
-    return shortUrl.originalUrl;
+    return shortUrl;
   }
 
   async updateShortUrl(userId: string, shortCode: string, data: UpdateUrlInputType) {
@@ -71,12 +72,11 @@ export class UrlService {
       throw new AppError('You are not allowed to perform this action', 403);
     }
 
-
     await deleteCache(getShortUrlCacheKey(shortCode));
 
     await setCache(
       getShortUrlCacheKey(updatedShortUrl.shortCode),
-      `${updatedShortUrl.originalUrl}`,
+      JSON.stringify(shortUrl),
       300,
     );
 
