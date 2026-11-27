@@ -9,23 +9,26 @@ const createId = customAlphabet(
   SHORTCODELENGTH,
 );
 
-const ALLOWEDPORTOCOLS = ['http', 'https'];
+const ALLOWED_PROTOCOLS = ['http:', 'https:'];
 
 export const createShortCode = (): string => {
   return createId();
 };
 
-export const parseUrl = (originalUrl: string) => {
-  try {
-    const parsedUrl = new URL(originalUrl);
+export const parseUrl = (originalUrl: string): string => {
+  let parsedUrl: URL;
 
-    if (!ALLOWEDPORTOCOLS.includes(parsedUrl.protocol)) {
-      throw new AppError('Invalid URL protocol. Only http and https are allowed.', 400);
-    }
-    return parsedUrl.toString();
-  } catch (error) {
+  try {
+    parsedUrl = new URL(originalUrl);
+  } catch {
     throw new AppError('Invalid URL format.', 400);
   }
+
+  if (!ALLOWED_PROTOCOLS.includes(parsedUrl.protocol)) {
+    throw new AppError('Invalid URL protocol. Only http and https are allowed.', 400);
+  }
+
+  return parsedUrl.toString();
 };
 
 export const getShortUrlCacheKey = (shortCode: string) => {

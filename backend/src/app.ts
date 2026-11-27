@@ -7,6 +7,7 @@ import { globalErrorHandler } from './middlewares/error.middleware.js';
 import authRouter from './modules/auth/auth.route.js';
 import urlRouter from './modules/url/url.route.js';
 import { env } from './config/env.config.js';
+import { globalRateLimitter } from './middlewares/rate-limit/global-rate-limit.middleware.js';
 
 const app = express();
 
@@ -27,6 +28,8 @@ app.get('/health', (_req, res) => {
     message: 'URL SHORTENER API IS WOKING FINE',
   });
 });
+
+app.use(globalRateLimitter);
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/url', urlRouter);

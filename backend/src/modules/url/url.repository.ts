@@ -21,18 +21,15 @@ export class UrlRespository implements IUrlRepository {
     });
   }
 
-
-
   async updateShortUrl(shortCode: string, data: UpdateUrlInputType): Promise<ShortURL | null> {
     const updateShortUrls = await prisma.shortURL.update({
-      where:{
+      where: {
         shortCode,
       },
-      data:{
-        originalUrl: data.updatedOriginalUrl
-      }
-    })
+      data: {
+        originalUrl: data.updatedOriginalUrl,
+      },
+    });
     return updateShortUrls;
   }
-
 }

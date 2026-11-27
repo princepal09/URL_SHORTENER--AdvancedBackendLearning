@@ -12,6 +12,12 @@ export const envSchema = z.object({
   REFRESH_TOKEN_EXPIRES_IN: z.string(),
   URL_SHORTCODE_LENGTH: z.coerce.number(),
   REDIS_URL: z.string(),
+  GLOBAL_RATE_LIMIT_WINDOW_MS: z.coerce.number(),
+  GLOBAL_RATE_LIMIT_SIZE: z.coerce.number(),
+  LOGIN_RATE_LIMIT_WINDOW_MS: z.coerce.number(),
+  LOGIN_RATE_LIMIT_SIZE: z.coerce.number(),
+  SHORT_URL_RATE_LIMIT_WINDOW_MS: z.coerce.number(),
+  SHORT_URL_RATE_LIMIT_SIZE: z.coerce.number()
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -7,4 +7,3 @@ export interface IUrlRepository {
   createShortUrl(data: createShortUrlType): Promise<ShortURL>;
   updateShortUrl(shortCode:string, data:UpdateUrlInputType):Promise<ShortURL | null>;
 }
-[]
