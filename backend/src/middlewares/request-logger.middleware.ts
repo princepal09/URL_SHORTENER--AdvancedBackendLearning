@@ -1,18 +1,26 @@
-import { NextFunction, Request, Response } from 'express';
-import { logger } from '../config/logger.js';
+import { NextFunction, Request, Response } from "express";
+import { logger } from "../config/logger.js";
 
-export const requestLogger = (req: Request, res: Response, next: NextFunction) => {
-  const start = Date.now();
+const INSTANCE_NAME = process.env.HOSTNAME ?? "unknown";
 
-  res.on('finish', () => {
-    const duration = Date.now() - start;
+export const requestLogger = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  const start = process.hrtime.bigint();
+
+  res.on("finish", () => {
+    const duration = Number(process.hrtime.bigint() - start) / 1_000_000;
 
     logger.info({
+      event: "HTTP_REQUEST",
       method: req.method,
-      url: req.originalUrl.split('?')[0],
+      path: req.originalUrl,
       statusCode: res.statusCode,
-      duration: `${duration}ms`,
+      served_by: INSTANCE_NAME,
       ip: req.ip,
+      durationMs: Number(duration.toFixed(2)),
     });
   });
 
