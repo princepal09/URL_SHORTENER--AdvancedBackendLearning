@@ -3,7 +3,7 @@ import { validate } from '../../middlewares/validate.middleware.js';
 import { createUrlSchema, updateUrlSchema } from './url.schema.js';
 import { authMiddleware } from '../../middlewares/authentication.middleware.js';
 import { UrlController } from './url.controller.js';
-import { shortUrlRateLimit } from '../../middlewares/rate-limit/short-url-rate-limit.middleware.js';
+import { shortUrlTokenBuckerRateLimit } from '../../middlewares/rate-limit/short-url-token-bucket-rate-limit-middleware.js';
 
 const router = express.Router();
 
@@ -12,7 +12,7 @@ const userController = new UrlController();
 router.post(
   '/',
   authMiddleware,
-  shortUrlRateLimit,
+  shortUrlTokenBuckerRateLimit,
   validate(createUrlSchema),
   userController.createshortUrl,
 );

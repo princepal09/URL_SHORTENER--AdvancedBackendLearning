@@ -17,7 +17,10 @@ export const envSchema = z.object({
   LOGIN_RATE_LIMIT_WINDOW_MS: z.coerce.number(),
   LOGIN_RATE_LIMIT_SIZE: z.coerce.number(),
   SHORT_URL_RATE_LIMIT_WINDOW_MS: z.coerce.number(),
-  SHORT_URL_RATE_LIMIT_SIZE: z.coerce.number()
+  SHORT_URL_RATE_LIMIT_SIZE: z.coerce.number(),
+  SHORT_URL_TOKEN_BUCKET_CAPACITY:z.coerce.number(),
+  SHORT_URL_TOKEN_REFILL_RATE:z.coerce.number(),
+  SHORT_URL_TOKEN_REFILL_INTERVAL:z.coerce.number(),
 });
 
 export type Env = z.infer<typeof envSchema>;
